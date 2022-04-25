@@ -29,4 +29,38 @@ public class Product {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] image;
+
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getPrice() {
+        return this.price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public byte[] getImage() {
+        return this.image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+    
 }
