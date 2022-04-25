@@ -216,42 +216,34 @@ public class LoadData {
             Purchase purchaseUser2 = new Purchase();
             purchaseUser2.setProduct(product);
             purchaseUser2.setQuantity(2);
-            purchaseRepository.save(purchaseUser2);
 
             Purchase purchaseUser3 = new Purchase();
             purchaseUser3.setProduct(product2);
             purchaseUser3.setQuantity(3);
-            purchaseRepository.save(purchaseUser3);
 
             Purchase purchaseUser4P3 = new Purchase();
             purchaseUser4P3.setProduct(product3);
             purchaseUser4P3.setQuantity(2);
-            purchaseRepository.save(purchaseUser4P3);
 
             Purchase purchaseUser4P4 = new Purchase();
             purchaseUser4P4.setProduct(product4);
             purchaseUser4P4.setQuantity(1);
-            purchaseRepository.save(purchaseUser4P4);
 
             Purchase purchaseUser4P5 = new Purchase();
             purchaseUser4P5.setProduct(product5);
             purchaseUser4P5.setQuantity(1);
-            purchaseRepository.save(purchaseUser4P5);
 
             Purchase purchaseUser4P6 = new Purchase();
             purchaseUser4P6.setProduct(product6);
             purchaseUser4P6.setQuantity(1);
-            purchaseRepository.save(purchaseUser4P6);
 
             Purchase purchaseUser4P7 = new Purchase();
             purchaseUser4P7.setProduct(product7);
             purchaseUser4P7.setQuantity(3);
-            purchaseRepository.save(purchaseUser4P7);
 
             Purchase purchaseUser4P8 = new Purchase();
             purchaseUser4P8.setProduct(product8);
             purchaseUser4P8.setQuantity(1);
-            purchaseRepository.save(purchaseUser4P8);
 
             // invoices
             Invoice invoiceUser2 = new Invoice();
