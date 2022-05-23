@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.desarrolloweb.proyecto.jpa.model.User;
 
-public interface IUserService {
+public interface IUserService{
     public boolean addUser(User user);
 
     public boolean updateUser(User user);
@@ -17,7 +17,7 @@ public interface IUserService {
 
     public User getUser(String name);
 
-    public User getUserByEmail(String email);
+    public User getUserByUsername(String email);
 
     public List<User> getAllUsers();
 }

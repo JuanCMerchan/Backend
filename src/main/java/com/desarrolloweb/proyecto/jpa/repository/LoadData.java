@@ -13,51 +13,58 @@ import com.desarrolloweb.proyecto.jpa.model.Invoice;
 import com.desarrolloweb.proyecto.jpa.model.Product;
 import com.desarrolloweb.proyecto.jpa.model.Purchase;
 import com.desarrolloweb.proyecto.jpa.model.User;
+import com.desarrolloweb.proyecto.jpa.model.Role;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class LoadData {
     @Bean
     CommandLineRunner populatorDB(UserRepository userRepository, ProductRepository productRepository,
-            PurchaseRepository purchaseRepository, InvoiceRepository invoiceRepository) {
+            PurchaseRepository purchaseRepository, InvoiceRepository invoiceRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         return args -> {
 
             System.out.println("Poblando la BD\n");
-
+            Role adminRole = new Role();
+            adminRole.setName("ROLE_ADMIN");
+            roleRepository.save(adminRole);
+            Role userRole = new Role();
+            userRole.setName("ROLE_USER");
+            roleRepository.save(userRole);
             // usuarios
             User user = new User();
-            user.setEmail("juancamerchan@gmail.com");
-            user.setIsAdmin(true);
+            user.setUsername("juancamerchan@gmail.com");
+            user.setRole(adminRole);
             user.setName("Juan pablo");
-            user.setPassword("lapassmaschevere");
+            user.setPassword(bCryptPasswordEncoder.encode("lapassmaschevere"));
             user.setShoppingCart(new ArrayList<Purchase>());
             userRepository.save(user);
 
             User user2 = new User();
-            user2.setEmail("carlistos@gmail.com");
-            user2.setIsAdmin(false);
+            user2.setUsername("carlistos@gmail.com");
+            user.setRole(userRole);
             user2.setName("Carlos");
             userRepository.save(user2);
 
             User user3 = new User();
-            user3.setEmail("lolaamantehelados@hotmail.com");
-            user3.setIsAdmin(false);
+            user3.setUsername("lolaamantehelados@hotmail.com");
+            user.setRole(userRole);
             user3.setName("Isabella villa");
             userRepository.save(user3);
 
             User user4 = new User();
-            user4.setEmail("meencantaelhelado@yahoo.com");
-            user4.setIsAdmin(false);
+            user4.setUsername("meencantaelhelado@yahoo.com");
+            user.setRole(userRole);
             user4.setName("Juan Carlos");
             userRepository.save(user4);
 
             User user5 = new User();
-            user5.setEmail("vera.pablo@gmail.com");
-            user5.setIsAdmin(false);
+            user5.setUsername("vera.pablo@gmail.com");
+            user.setRole(userRole);
             user5.setName("Pablo vera");
             userRepository.save(user5);
 

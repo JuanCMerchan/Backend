@@ -3,16 +3,40 @@ package com.desarrolloweb.proyecto.jpa.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import com.desarrolloweb.proyecto.jpa.model.User;
 import com.desarrolloweb.proyecto.jpa.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import lombok.AllArgsConstructor;
+
 @Service
-public class UserService implements IUserService{
+@AllArgsConstructor
+public class UserService implements UserDetailsService, IUserService
+{
     @Autowired
     private UserRepository userRepository;
+
+    @Transactional
+    @Override 
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+    {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if(userOptional.isPresent())
+        {
+            User user = userOptional.get();
+            var authorities = List.of(new SimpleGrantedAuthority(user.getRole().getName()));
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        }
+        throw new UsernameNotFoundException(username);
+    }
 
     @Override
     public boolean addUser(User user) {
@@ -59,8 +83,8 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).get();
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username).get();
     }
 
     @Override
@@ -69,8 +93,8 @@ public class UserService implements IUserService{
         if(userOptional.isPresent())
         {
             User userTemp = userOptional.get();
-            userTemp.setEmail(user.getEmail());
-            userTemp.setIsAdmin(user.getIsAdmin());
+            userTemp.setUsername(user.getUsername());
+            userTemp.setRole(user.getRole());
             userTemp.setName(user.getName());
             userTemp.setPassword(user.getPassword());
             userTemp.setShoppingCart(user.getShoppingCart());
