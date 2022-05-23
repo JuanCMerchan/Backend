@@ -36,35 +36,29 @@ public class LoadData {
             userRole.setName("ROLE_USER");
             roleRepository.save(userRole);
             // usuarios
-            User user = new User();
-            user.setUsername("juancamerchan@gmail.com");
-            user.setRole(adminRole);
-            user.setName("Juan pablo");
-            user.setPassword(bCryptPasswordEncoder.encode("lapassmaschevere"));
-            user.setShoppingCart(new ArrayList<Purchase>());
-            userRepository.save(user);
+            
 
             User user2 = new User();
             user2.setUsername("carlistos@gmail.com");
-            user.setRole(userRole);
+            user2.setRole(userRole);
             user2.setName("Carlos");
             userRepository.save(user2);
 
             User user3 = new User();
             user3.setUsername("lolaamantehelados@hotmail.com");
-            user.setRole(userRole);
+            user3.setRole(userRole);
             user3.setName("Isabella villa");
             userRepository.save(user3);
 
             User user4 = new User();
             user4.setUsername("meencantaelhelado@yahoo.com");
-            user.setRole(userRole);
+            user4.setRole(userRole);
             user4.setName("Juan Carlos");
             userRepository.save(user4);
 
             User user5 = new User();
             user5.setUsername("vera.pablo@gmail.com");
-            user.setRole(userRole);
+            user5.setRole(userRole);
             user5.setName("Pablo vera");
             userRepository.save(user5);
 
@@ -292,6 +286,22 @@ public class LoadData {
             invoiceUser4.setListPurchases(purchases3);
             invoiceRepository.save(invoiceUser4);
 
+            User user = new User();
+            user.setUsername("juancamerchan@gmail.com");
+            user.setRole(adminRole);
+            user.setName("Juan pablo");
+            user.setPassword(bCryptPasswordEncoder.encode("lapassmaschevere"));
+            user.setShoppingCart(new ArrayList<Purchase>());
+            
+            Purchase purchaseUser = new Purchase();
+            purchaseUser.setProduct(product);
+            purchaseUser.setQuantity(2);
+            
+            List<Purchase> cartUser = new ArrayList<Purchase>();
+            cartUser.add(purchaseUser);
+            user.setShoppingCart(cartUser);
+            
+            userRepository.save(user);
         };
     }
 }

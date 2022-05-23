@@ -13,6 +13,5 @@ public class UserDTO {
     private long id;
     private String name;
     private String username;
-    private boolean isAdmin;
     private List<PurchaseDTO> shoppingCart;
 }
