@@ -2,6 +2,7 @@ package com.desarrolloweb.proyecto.jpa.jwt;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
@@ -46,13 +47,18 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
 
         if(token != null)
         {
-            Claims body = Jwts.parser().setSigningKey("papa_heladino").parseClaimsJws(token.replace("Bearer ", "")).getBody();
+            Claims body = Jwts.parser()
+                .setSigningKey("papa_heladino")
+                .parseClaimsJws(token.replace("Bearer ", ""))
+                .getBody();
             String user = body.getSubject();
-
-            var roles = Arrays.stream(body.get("role").toString().split(",") ).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
             if(user != null)
             {
+                final Collection<SimpleGrantedAuthority> roles = Arrays.stream(body.get("role")
+                .toString().split(",") )
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
                 return new UsernamePasswordAuthenticationToken(user, null, roles);
             }
             return null;

@@ -18,7 +18,7 @@ public class ConfigApp {
     private Environment env;
 
     @Bean
-    public BCryptPasswordEncoder gCryptPasswordEncoder()
+    public BCryptPasswordEncoder bCryptPasswordEncoder()
     {
         return new BCryptPasswordEncoder();
     }

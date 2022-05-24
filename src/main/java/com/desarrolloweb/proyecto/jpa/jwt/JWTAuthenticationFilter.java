@@ -58,9 +58,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         claims.put("value1", "1");
         claims.put("othervalue", 100L);
 
-        String token = Jwts.builder().setIssuedAt(new Date()).setClaims(claims).
-            setSubject(((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername()).setExpiration(new Date(System.currentTimeMillis() + 3600000)).signWith(SignatureAlgorithm.HS512, "papa_heladino").compact();
+        String token = Jwts.builder()
+            .setIssuedAt(new Date())
+            .setClaims(claims)
+            .setSubject(((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername())
+            .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+            .signWith(SignatureAlgorithm.HS512, "papa_heladino")
+            .compact();
 
         response.addHeader("Authorization", "Bearer " + token);
+        response.getWriter().write("Bearer " + token);
     }
 }
