@@ -97,6 +97,7 @@ public class InvoiceController {
     @PostMapping("/create/{username}")
     public boolean createInvoice(@RequestBody Invoice newInvoice, @PathVariable("username") String username)
     {
+        newInvoice.setDate(new Date());
         User user = userService.getUserByUsername(username);
         newInvoice.setUserId(user.getId());
         return invoiceService.addInvoice(newInvoice);
