@@ -10,7 +10,6 @@ import com.desarrolloweb.proyecto.jpa.services.IProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -37,23 +36,31 @@ public class ProductController {
         return convertDTO(productService.getProduct(id));
     }
 
+    @GetMapping("/")
+    public List<ProductDTO> getProducts()
+    {
+        List<Product> products = productService.getAllProducts();
+        List<ProductDTO> result = convertDTOs(products);
+        return result;
+    }
+
     @GetMapping("/page/{page}/{size}")
-    public Page<ProductDTO> getProducts(@PathVariable("page") int page, @PathVariable("size") int size)
+    public List<ProductDTO> getProducts(@PathVariable("page") int page, @PathVariable("size") int size)
     {
         Pageable pageable = new SolrPageRequest(page, size, Sort.by(Direction.ASC, "id"));
         Page<Product> products = productService.getProductPage(pageable);
         List<ProductDTO> result = convertDTOs(products);
-        return new PageImpl<>(result, pageable, products.getTotalElements());
+        return result;
     }
 
 
     @GetMapping("/page/{page}/{size}/{partialName}")
-    public Page<ProductDTO> getProducts(@PathVariable("page") int page, @PathVariable("size") int size, @PathVariable("partialName") String partialName)
+    public List<ProductDTO> getProducts(@PathVariable("page") int page, @PathVariable("size") int size, @PathVariable("partialName") String partialName)
     {
         Pageable pageable = new SolrPageRequest(page, size, Sort.by(Direction.ASC, "id"));
         Page<Product> products = productService.getProductPage(partialName, pageable);
         List<ProductDTO> result = convertDTOs(products);
-        return new PageImpl<>(result, pageable, products.getTotalElements());
+        return result;
     }
 
     @PostMapping("/create")
@@ -81,6 +88,16 @@ public class ProductController {
     }
 
     private List<ProductDTO> convertDTOs(Page<Product> products)
+    {
+        List<ProductDTO> result = new ArrayList<>();
+        for(Product product : products)
+        {
+            result.add(convertDTO(product));
+        }
+        return result;
+    }   
+
+    private List<ProductDTO> convertDTOs(List<Product> products)
     {
         List<ProductDTO> result = new ArrayList<>();
         for(Product product : products)

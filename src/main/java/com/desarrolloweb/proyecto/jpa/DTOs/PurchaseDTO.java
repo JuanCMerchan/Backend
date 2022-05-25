@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 public class PurchaseDTO {
     long id;
-    private ProductDTO product;
+    private long productId;
     private int quantity;
 }

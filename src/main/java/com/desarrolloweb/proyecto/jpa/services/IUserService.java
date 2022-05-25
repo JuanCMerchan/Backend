@@ -11,7 +11,7 @@ public interface IUserService{
 
     public boolean deleteUser(User user);
 
-    public boolean deleteUser(Long id);
+    public boolean deleteUser(String username);
 
     public User getUser(Long id);
 

@@ -6,10 +6,12 @@ import com.desarrolloweb.proyecto.jpa.DTOs.PurchaseDTO;
 import com.desarrolloweb.proyecto.jpa.DTOs.UserDTO;
 import com.desarrolloweb.proyecto.jpa.model.Purchase;
 import com.desarrolloweb.proyecto.jpa.model.User;
+import com.desarrolloweb.proyecto.jpa.services.IRoleService;
 import com.desarrolloweb.proyecto.jpa.services.IUserService;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,27 +27,49 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping("/{id}")
-    public UserDTO getuser(@PathVariable("id") long id)
+    @Autowired
+    private IRoleService roleService;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @GetMapping("/{username}")
+    public UserDTO getuser(@PathVariable("username") String username)
     {
-        return convertDTO(userService.getUser(id));
+        User user = userService.getUserByUsername(username);
+        UserDTO userDTO = convertDTO(user);
+        if(user.getRole().getName().equals("ROLE_ADMIN"))
+        {
+            userDTO.setAdmin(true);
+        }
+        else
+        {
+            userDTO.setAdmin(false);
+        }
+        return userDTO;
     }
 
     @PostMapping("/create")
     public boolean createUser(@RequestBody User newUser)
     {
+        newUser.setRole(roleService.getRoleByName("ROLE_USER"));
+        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
         return userService.addUser(newUser);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public boolean deleteUser(@PathVariable("id") long id)
+    @DeleteMapping("/delete/{username}")
+    public boolean deleteUser(@PathVariable("username") String username)
     {
-        return userService.deleteUser(id);
+        return userService.deleteUser(username);
     }
 
     @PutMapping("/update")
     public boolean updateUser(@RequestBody User user)
     {
+        if(user.getPassword() != "")
+        {
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        }
         return userService.updateUser(user);
     }
 
@@ -56,7 +80,8 @@ public class UserController {
         result.setShoppingCart(new ArrayList<>());
         for(Purchase purchase : user.getShoppingCart())
         {
-            result.getShoppingCart().add(mapper.map(purchase, PurchaseDTO.class));
+            PurchaseDTO purchaseDTO = mapper.map(purchase, PurchaseDTO.class);
+            result.getShoppingCart().add(purchaseDTO);
         }
         return result;
     }

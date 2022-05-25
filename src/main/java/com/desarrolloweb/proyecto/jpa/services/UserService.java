@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.desarrolloweb.proyecto.jpa.model.Purchase;
 import com.desarrolloweb.proyecto.jpa.model.User;
+import com.desarrolloweb.proyecto.jpa.repository.PurchaseRepository;
 import com.desarrolloweb.proyecto.jpa.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class UserService implements UserDetailsService, IUserService
 {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private IPurchaseService purchaseService;
 
     @Transactional
     @Override 
@@ -56,8 +61,8 @@ public class UserService implements UserDetailsService, IUserService
     }
 
     @Override
-    public boolean deleteUser(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
+    public boolean deleteUser(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
         if(userOptional.isPresent())
         {
             userRepository.delete(userOptional.get());
@@ -89,15 +94,23 @@ public class UserService implements UserDetailsService, IUserService
 
     @Override
     public boolean updateUser(User user) {
-        Optional<User> userOptional = userRepository.findById(user.getId());
+        Optional<User> userOptional = userRepository.findByUsername(user.getUsername());
         if(userOptional.isPresent())
         {
             User userTemp = userOptional.get();
-            userTemp.setUsername(user.getUsername());
-            userTemp.setRole(user.getRole());
-            userTemp.setName(user.getName());
-            userTemp.setPassword(user.getPassword());
+
+            if(user.getName() != "")
+            {
+                userTemp.setName(user.getName());
+            }
+
+            if(user.getPassword() != "")
+            {
+                userTemp.setPassword(user.getPassword());
+            }
+
             userTemp.setShoppingCart(user.getShoppingCart());
+
             userRepository.save(userTemp);
             return true;
         }

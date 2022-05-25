@@ -22,7 +22,6 @@ public class Purchase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Product product;
+    private Long productId;
     private Integer quantity;
 }

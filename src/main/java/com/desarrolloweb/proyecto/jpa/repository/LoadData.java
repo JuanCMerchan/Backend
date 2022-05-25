@@ -215,35 +215,35 @@ public class LoadData {
 
             // purchases
             Purchase purchaseUser2 = new Purchase();
-            purchaseUser2.setProduct(product);
+            purchaseUser2.setProductId(product.getId());
             purchaseUser2.setQuantity(2);
 
             Purchase purchaseUser3 = new Purchase();
-            purchaseUser3.setProduct(product2);
+            purchaseUser3.setProductId(product2.getId());
             purchaseUser3.setQuantity(3);
 
             Purchase purchaseUser4P3 = new Purchase();
-            purchaseUser4P3.setProduct(product3);
+            purchaseUser4P3.setProductId(product3.getId());
             purchaseUser4P3.setQuantity(2);
 
             Purchase purchaseUser4P4 = new Purchase();
-            purchaseUser4P4.setProduct(product4);
+            purchaseUser4P4.setProductId(product4.getId());
             purchaseUser4P4.setQuantity(1);
 
             Purchase purchaseUser4P5 = new Purchase();
-            purchaseUser4P5.setProduct(product5);
+            purchaseUser4P5.setProductId(product5.getId());
             purchaseUser4P5.setQuantity(1);
 
             Purchase purchaseUser4P6 = new Purchase();
-            purchaseUser4P6.setProduct(product6);
+            purchaseUser4P6.setProductId(product6.getId());
             purchaseUser4P6.setQuantity(1);
 
             Purchase purchaseUser4P7 = new Purchase();
-            purchaseUser4P7.setProduct(product7);
+            purchaseUser4P7.setProductId(product7.getId());
             purchaseUser4P7.setQuantity(3);
 
             Purchase purchaseUser4P8 = new Purchase();
-            purchaseUser4P8.setProduct(product8);
+            purchaseUser4P8.setProductId(product8.getId());
             purchaseUser4P8.setQuantity(1);
 
             // invoices
@@ -288,13 +288,13 @@ public class LoadData {
 
             User user = new User();
             user.setUsername("juancamerchan@gmail.com");
-            user.setRole(adminRole);
+            user.setRole(userRole);
             user.setName("Juan pablo");
             user.setPassword(bCryptPasswordEncoder.encode("lapassmaschevere"));
             user.setShoppingCart(new ArrayList<Purchase>());
             
             Purchase purchaseUser = new Purchase();
-            purchaseUser.setProduct(product);
+            purchaseUser.setProductId(product2.getId());
             purchaseUser.setQuantity(2);
             
             List<Purchase> cartUser = new ArrayList<Purchase>();
