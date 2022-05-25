@@ -51,6 +51,21 @@ public class InvoiceService implements IInvoiceService{
     }
 
     @Override
+    public List<Invoice> getInvoiceList(Long userId) {
+        return invoiceRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<Invoice> getInvoiceList(Long userId, Date date1, Date date2) {
+        return invoiceRepository.findByUserIdAndDateBetween(userId, date1, date2);
+    }
+
+    @Override
+    public List<Invoice> getInvoiceList(Date date1, Date date2) {
+        return invoiceRepository.findByDateBetween(date1, date2);
+    }
+
+    @Override
     public Page<Invoice> getInvoicePage(Pageable pageable) {
         return invoiceRepository.findAll(pageable);
     }

@@ -17,6 +17,12 @@ public interface IInvoiceService {
 
     public List<Invoice> getAllInvoices();
 
+    public List<Invoice> getInvoiceList(Long userId);
+
+    public List<Invoice> getInvoiceList(Date date1, Date date2);
+
+    public List<Invoice> getInvoiceList(Long userId, Date date1, Date date2);
+
     public Page<Invoice> getInvoicePage(Pageable pageable);
 
     public Page<Invoice> getInvoicePage(Date date1, Date date2, Pageable pageable);

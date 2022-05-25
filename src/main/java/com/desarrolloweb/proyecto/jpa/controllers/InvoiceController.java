@@ -11,7 +11,9 @@ import com.desarrolloweb.proyecto.jpa.DTOs.InvoiceDTO;
 import com.desarrolloweb.proyecto.jpa.DTOs.PurchaseDTO;
 import com.desarrolloweb.proyecto.jpa.model.Invoice;
 import com.desarrolloweb.proyecto.jpa.model.Purchase;
+import com.desarrolloweb.proyecto.jpa.model.User;
 import com.desarrolloweb.proyecto.jpa.services.IInvoiceService;
+import com.desarrolloweb.proyecto.jpa.services.IUserService;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class InvoiceController {
     @Autowired
     private IInvoiceService invoiceService;
 
+    @Autowired
+    private IUserService userService;
+
     @GetMapping("/page/{page}/{size}")
     public Page<InvoiceDTO> getInvoices(@PathVariable("page") int page, @PathVariable("size") int size)
     {
@@ -53,27 +58,47 @@ public class InvoiceController {
         return new PageImpl<>(result, pageable, Invoices.getTotalElements());
     }
 
-    @GetMapping("/page/{page}/{size}/{userId}")
-    public Page<InvoiceDTO> getInvoices(@PathVariable("page") int page, @PathVariable("size") int size, @PathVariable("userId") long userId)
+    @GetMapping("/list/{username}")
+    public List<InvoiceDTO> getInvoices(@PathVariable("username") String username)
     {
-        Pageable pageable = new SolrPageRequest(page, size, Sort.by(Direction.ASC, "id"));
-        Page<Invoice> Invoices = invoiceService.getInvoicePage(userId, pageable);
+        User user = userService.getUserByUsername(username);
+        List<Invoice> Invoices = invoiceService.getInvoiceList(user.getId());
         List<InvoiceDTO> result = convertDTOs(Invoices);
-        return new PageImpl<>(result, pageable, Invoices.getTotalElements());
+        return result;
     }
 
-    @GetMapping("/page/{page}/{size}/{startDate}/{endDate}/{userId}")
-    public Page<InvoiceDTO> getInvoices(@PathVariable("page") int page, @PathVariable("size") int size,@PathVariable("startDate") String startDate,@PathVariable("endDate") String endDate, @PathVariable("userId") long userId)
+    @GetMapping("/page/{page}/{size}/{username}")
+    public List<InvoiceDTO> getInvoices(@PathVariable("page") int page, @PathVariable("size") int size, @PathVariable("username") String username)
     {
+        User user = userService.getUserByUsername(username);
         Pageable pageable = new SolrPageRequest(page, size, Sort.by(Direction.ASC, "id"));
-        Page<Invoice> Invoices = invoiceService.getInvoicePage(userId, parseDate(startDate), parseDate(endDate), pageable);
+        Page<Invoice> Invoices = invoiceService.getInvoicePage(user.getId(), pageable);
         List<InvoiceDTO> result = convertDTOs(Invoices);
-        return new PageImpl<>(result, pageable, Invoices.getTotalElements());
+        return result;
     }
 
-    @PostMapping("/create")
-    public boolean createInvoice(@RequestBody Invoice newInvoice)
+    @GetMapping("/list/{startDate}/{endDate}/{username}")
+    public List<InvoiceDTO> getInvoices(@PathVariable("startDate") String startDate,@PathVariable("endDate") String endDate, @PathVariable("username") String username)
     {
+        User user = userService.getUserByUsername(username);
+        List<Invoice> Invoices = invoiceService.getInvoiceList(user.getId(), parseDate(startDate), parseDate(endDate));
+        List<InvoiceDTO> result = convertDTOs(Invoices);
+        return result;
+    }
+
+    @GetMapping("/list/{startDate}/{endDate}")
+    public List<InvoiceDTO> getInvoices(@PathVariable("startDate") String startDate,@PathVariable("endDate") String endDate)
+    {
+        List<Invoice> Invoices = invoiceService.getInvoiceList(parseDate(startDate), parseDate(endDate));
+        List<InvoiceDTO> result = convertDTOs(Invoices);
+        return result;
+    }
+
+    @PostMapping("/create/{username}")
+    public boolean createInvoice(@RequestBody Invoice newInvoice, @PathVariable("username") String username)
+    {
+        User user = userService.getUserByUsername(username);
+        newInvoice.setUserId(user.getId());
         return invoiceService.addInvoice(newInvoice);
     }
 
@@ -96,6 +121,16 @@ public class InvoiceController {
     }
 
     private List<InvoiceDTO> convertDTOs(Page<Invoice> invoices)
+    {
+        List<InvoiceDTO> result = new ArrayList<>();
+        for(Invoice invoice : invoices)
+        {
+            result.add(convertDTO(invoice));
+        }
+        return result;
+    } 
+
+    private List<InvoiceDTO> convertDTOs(List<Invoice> invoices)
     {
         List<InvoiceDTO> result = new ArrayList<>();
         for(Invoice invoice : invoices)
